@@ -20,14 +20,10 @@ function LaptopModel() {
   return <primitive object={scene} scale={1.7} position={[-0.5, -0.1, 0]} />;
 }
 
-
-
-export function StaticText(triggerRef ) {
+export function StaticText(triggerRef) {
   const groupRef = useRef();
   const letterRefs = useRef([]);
   const originalPositions = useRef([]);
- 
-
 
   useFrame(({ camera }) => {
     if (groupRef.current) {
@@ -52,9 +48,9 @@ export function StaticText(triggerRef ) {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: triggerRef?.current,
-        
+
         start: "top top",
-           end: "bottom top",
+        end: "bottom top",
         scrub: true,
       },
     });
@@ -133,15 +129,11 @@ function ErrorBoundary({ children, fallback }) {
   );
 }
 
-
-
-
-
 export default function HeroModel() {
   const containerRef = useRef();
   return (
     <div
-    ref={containerRef}
+      ref={containerRef}
       style={{
         width: "100vw",
         height: "100vh",
@@ -149,19 +141,19 @@ export default function HeroModel() {
         marginLeft: "-8vw",
         marginTop: "-2vw",
         overflow: "hidden",
-        marginBottom:"-60vw",
+        marginBottom: "-60vw",
       }}
     >
-
-
-
-
-      <ErrorBoundary 
-      >
+      <ErrorBoundary>
         <Canvas
           shadows
           camera={{ position: [0, 0, 10], fov: 25 }}
-          style={{ width: "100%", height: "100%", display: "block" }}
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "block",
+            marginTop: "32px",
+          }}
         >
           <ambientLight intensity={1.2} />
           <directionalLight position={[5, 5, 5]} intensity={2} />

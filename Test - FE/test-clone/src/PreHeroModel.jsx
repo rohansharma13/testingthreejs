@@ -1,21 +1,15 @@
-import React, { Suspense, useRef, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import React, { Suspense, useRef, useState, useEffect } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import { ErrorBoundary } from "react-error-boundary";
 
-function PreHeroModelScene({ setShowNext }) {
+function PreHeroModelScene() {
   const modelRef = useRef();
   const { scene } = useGLTF("/oldcomputer.glb");
 
-  useFrame((state) => {
-    const z = state.camera.position.z;
-    console.log("Camera Z:", z); // Debug zoom level in browser
-
-    // Trigger showNext when zoomed in close enough
-    if (z < 8) {
-      setShowNext(true);
-    } else {
-      setShowNext(false);
+  useFrame(() => {
+    if (modelRef.current) {
+      modelRef.current.rotation.y += 0;
     }
   });
 
@@ -24,7 +18,7 @@ function PreHeroModelScene({ setShowNext }) {
       ref={modelRef}
       object={scene}
       scale={0.7}
-      position={[0, -1, 2]}
+      position={[.2, -1, 3]}
     />
   );
 }
@@ -38,21 +32,53 @@ function ErrorFallback() {
   );
 }
 
+function ZoomScrollHandler({ controlsRef }) {
+  const { camera } = useThree();
+  const SCROLL_TRIGGER_DISTANCE = 2;
+
+  useFrame(() => {
+    if (controlsRef.current) {
+      const distance = camera.position.distanceTo(controlsRef.current.target);
+      document.body.style.overflow = "y";  
+    }
+  });
+
+  return null;
+}
+
 function PreHeroModel() {
-  const [showNext, setShowNext] = useState(false);
+  const controlsRef = useRef();
+  const [showText, setShowText] = useState(false);
+
+
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setShowText(true);
+      } else {
+        setShowText(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <div className="relative w-full">
-      {/* 3D Canvas Section */}
-      <div
-        style={{
-          width: "100vw",
-          height: "100vh",
-          backgroundColor: "black",
-          overflow: "hidden",
-          marginLeft: "-8vw",
-        }}
-      >
+    <div
+      style={{
+        width: "100vw",
+        height: "695px", // allow scrolling
+        backgroundColor: "black",
+        overflow: "hidden",
+        position: "relative",
+        marginLeft: "-140px",
+        marginTop: "-30px",
+      }}
+    >
+      {/* 3D Model Canvas */}
+      <div style={{ position: "sticky", top: 0, height: "100vh", zIndex: 0 }}>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Canvas
             shadows
@@ -62,21 +88,37 @@ function PreHeroModel() {
             <ambientLight intensity={1.5} />
             <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
             <Suspense fallback={null}>
-              <PreHeroModelScene setShowNext={setShowNext} />
-              <OrbitControls enableZoom={true} />
+              <PreHeroModelScene />
+              <OrbitControls
+                ref={controlsRef}
+                enableZoom={false}
+                enableDamping
+              />
+              <ZoomScrollHandler controlsRef={controlsRef} />
             </Suspense>
           </Canvas>
         </ErrorBoundary>
       </div>
 
-      {/* 🎯 Zoom-Triggered Overlay Section */}
-      {showNext && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-90 flex justify-center items-center z-50 transition-opacity duration-700">
-          <h1 className="text-white text-5xl font-bold animate-pulse">
-            🚀 Next Scene Unlocked via Zoom!
-          </h1>
-        </div>
-      )}
+      {/* Scroll-triggered text overlay */}
+      <div
+    style={{
+    position: "absolute",
+    marginTop: "-350px", // Adjusted for model's vertical placement
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    color: "white",
+    fontSize: "5rem",
+    fontWeight: "bold",
+    opacity: showText ? 1 : 0,
+    transition: "opacity 0.8s ease-in-out",
+    zIndex: 1,
+    pointerEvents: "none",
+  }}
+>
+  KHAALAS MEDIA
+</div>
+
     </div>
   );
 }

@@ -80,11 +80,13 @@ function App() {
     <main className="overflow-x-hidden overflow-y-hidden text-white font-sans">
 
 
-<section className="h-screen bg-black flex items-center justify-center relative">
-    <div className="w-full h-full">
-      <PreHeroModel />
-    </div>
-  </section>
+<section className="pre-hero h-screen bg-black flex items-center justify-center relative">
+  <div className="w-full h-full">
+    <PreHeroModel />
+  </div>
+</section>
+
+
 
 
       {/* Hero Section */}
