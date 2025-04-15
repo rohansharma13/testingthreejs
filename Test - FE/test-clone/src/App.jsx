@@ -6,6 +6,7 @@ import HeroModel from "./HeroModel";
 import { ErrorBoundary } from "react-error-boundary";
 import ProductPhotographyWithErrorBoundary from "./ProductPhotography";
 import PreHeroModel from "./PreHeroModel"; // 👈 Add this import
+import Lenis from "@studio-freight/lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,79 +16,51 @@ function App() {
   const textRef = useRef(null);
 
   useEffect(() => {
-    if (textRef.current && heroRef.current) {
-      // Text animation on scroll
-      const textAnimation = gsap.fromTo(
-        textRef.current,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.5,
-          ease: "power4.out",
-        }
-      );
+    const lenis = new Lenis({
+      duration: 1.5,
+      smooth: true,
+      smoothTouch: true,
+    });
 
-      // Scroll-triggered text animation
-      const scrollTriggerText = gsap.to(textRef.current, {
-        scrollTrigger: {
-          trigger: heroRef.current,
+    function raf(time) {
+      lenis.raf(time);
+      ScrollTrigger.update();
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => lenis.destroy();
+  }, []);
+
+  useEffect(() => {
+    const sections = gsap.utils.toArray("section");
+
+    sections.forEach((section, index) => {
+      if (index !== sections.length - 1) {
+        ScrollTrigger.create({
+          trigger: section,
           start: "top top",
           end: "bottom top",
+          pin: true,
           scrub: true,
-        },
-        opacity: 0,
-        y: -50,
-        ease: "power1.out",
-      });
+          pinSpacing: false, // This ensures overlapping effect
+        });
+      }
+    });
 
-      // Cleanup GSAP and ScrollTrigger
-      return () => {
-        textAnimation.kill();
-        scrollTriggerText.kill();
-        ScrollTrigger.getAll().forEach((trigger) => trigger.kill()); // Cleanup ScrollTriggers
-      };
-    }
-
-    if (imageRef.current) {
-      // Image animation on scroll
-      const imageAnimation = gsap.fromTo(
-        imageRef.current,
-        { opacity: 0, y: 100, scale: 1.1 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 1.5,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: imageRef.current,
-            start: "top 80%",
-            toggleActions: "play none none none",
-          },
-        }
-      );
-
-      // Cleanup GSAP and ScrollTrigger
-      return () => {
-        imageAnimation.kill();
-        ScrollTrigger.getAll().forEach((trigger) => trigger.kill()); // Cleanup ScrollTriggers
-      };
-    }
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
   }, []);
 
   return (
-    <main className="overflow-x-hidden overflow-y-hidden text-white font-sans">
-
-
-<section className="pre-hero h-screen bg-black flex items-center justify-center relative">
-  <div className="w-full h-full">
-    <PreHeroModel />
-  </div>
-</section>
-
-
-
+    <main className=" text-white font-sans">
+      <section className="pre-hero h-screen  bg-black flex items-center justify-center relative">
+        <div className="w-full h-full">
+          <PreHeroModel />
+        </div>
+      </section>
 
       {/* Hero Section */}
       <section
@@ -108,21 +81,21 @@ function App() {
       </section>
 
       {/* Scroll Section 3 */}
-      <section className="h-screen bg-blue-700 text-white flex items-center justify-center text-4xl">
-        Scroll Section 3
+      <section className="h-screen bg-black flex items-center justify-center relative">
+        Scroll Section 
       </section>
-      <section className="h-screen bg-blue-700 text-white flex items-center justify-center text-4xl">
-        Scroll Section 3
+      <section className="h-screen bg-black flex items-center justify-center relative">
+        Scroll Section
       </section>
 
-      <section className="h-screen bg-blue-700 text-white flex items-center justify-center text-4xl">
-        Scroll Section 3
+      <section className="h-screen bg-black flex items-center justify-center relative">
+        Scroll Section 
+      </section>
+      <section className="h-screen bg-black flex items-center justify-center relative">
+        Scroll Section 
       </section>
       <section className="h-screen bg-blue-700 text-white flex items-center justify-center text-4xl">
-        Scroll Section 3
-      </section>
-      <section className="h-screen bg-blue-700 text-white flex items-center justify-center text-4xl">
-        Scroll Section 3
+        Scroll Section 
       </section>
     </main>
   );

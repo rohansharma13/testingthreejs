@@ -135,12 +135,13 @@ export default function HeroModel() {
     <div
       ref={containerRef}
       style={{
-        width: "100vw",
+        width: "110vw",
         height: "100vh",
         position: "relative",
-        marginLeft: "-8vw",
+        marginLeft: "-20vw",
         marginTop: "-2vw",
         overflow: "hidden",
+        backgroundColor: "black",
         marginBottom: "-60vw",
       }}
     >

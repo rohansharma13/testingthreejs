@@ -18,7 +18,7 @@ function PreHeroModelScene() {
       ref={modelRef}
       object={scene}
       scale={0.7}
-      position={[.2, -1, 3]}
+      position={[0.2, -1, 3]}
     />
   );
 }
@@ -39,7 +39,7 @@ function ZoomScrollHandler({ controlsRef }) {
   useFrame(() => {
     if (controlsRef.current) {
       const distance = camera.position.distanceTo(controlsRef.current.target);
-      document.body.style.overflow = "y";  
+      
     }
   });
 
@@ -50,8 +50,6 @@ function PreHeroModel() {
   const controlsRef = useRef();
   const [showText, setShowText] = useState(false);
 
-
-  
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -69,11 +67,10 @@ function PreHeroModel() {
     <div
       style={{
         width: "100vw",
-        height: "695px", // allow scrolling
+        height: "950px",
         backgroundColor: "black",
-        overflow: "hidden",
         position: "relative",
-        marginLeft: "-140px",
+        marginLeft: "-320px",
         marginTop: "-30px",
       }}
     >
@@ -89,36 +86,30 @@ function PreHeroModel() {
             <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
             <Suspense fallback={null}>
               <PreHeroModelScene />
-              <OrbitControls
-                ref={controlsRef}
-                enableZoom={false}
-                enableDamping
-              />
+              <OrbitControls enableZoom={false} />
               <ZoomScrollHandler controlsRef={controlsRef} />
             </Suspense>
           </Canvas>
         </ErrorBoundary>
       </div>
 
-      {/* Scroll-triggered text overlay */}
       <div
-    style={{
-    position: "absolute",
-    marginTop: "-350px", // Adjusted for model's vertical placement
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    color: "white",
-    fontSize: "5rem",
-    fontWeight: "bold",
-    opacity: showText ? 1 : 0,
-    transition: "opacity 0.8s ease-in-out",
-    zIndex: 1,
-    pointerEvents: "none",
-  }}
->
-  KHAALAS MEDIA
-</div>
-
+        style={{
+          position: "absolute",
+          marginTop: "-500px",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          color: "white",
+          fontSize: "5rem",
+          fontWeight: "bold",
+          opacity: showText ? 1 : 0,
+          transition: "opacity 0.8s ease-in-out",
+          zIndex: 1,
+          pointerEvents: "none",
+        }}
+      >
+        AAAAA BBBB
+      </div>
     </div>
   );
 }

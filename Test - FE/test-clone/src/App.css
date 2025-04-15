@@ -43,3 +43,15 @@ html, body {
 .read-the-docs {
   color: #888;
 }
+
+
+.cards {
+  position: relative;
+  height: 100vh;
+}
+
+.card {
+  position: absolute;
+  top: 0;
+  left: 0;
+}

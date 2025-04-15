@@ -1,14 +1,13 @@
 import React, { Suspense, useRef, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, useGLTF, Text } from "@react-three/drei";
-import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorBoundary } from "react-error-boundary";
 import * as THREE from "three";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// 3D Model
 function ProductPhotography() {
   const { scene } = useGLTF("/photography.glb");
 
@@ -23,31 +22,16 @@ function ProductPhotography() {
   return <primitive object={scene} scale={0.4} position={[0.5, -1.8, 0]} />;
 }
 
-// Animated 3D Text
-function PhotographyText({triggerRef }) {
+function PhotographyText({ triggerRef }) {
   const groupRef = useRef();
   const letterRefs = useRef([]);
   const originalPositions = useRef([]);
 
-  // useFrame(({ camera }) => {
-  //   if (groupRef.current) {
-  //     groupRef.current.quaternion.copy(camera.quaternion);
-  //     const distance = 25;
-  //     const direction = camera.getWorldDirection(new THREE.Vector3());
-  //     groupRef.current.position.copy(
-  //       camera.position.clone().add(direction.multiplyScalar(distance))
-  //     );
-  //   }
-  // });
-
-
   useFrame(({ camera }) => {
     if (groupRef.current) {
-      groupRef.current.quaternion.copy(camera.quaternion); // rotate to face camera
+      groupRef.current.quaternion.copy(camera.quaternion);
     }
   });
-  
-
 
   const letters = "PHOTOGRAPHY".split("");
 
@@ -77,7 +61,7 @@ function PhotographyText({triggerRef }) {
         z: original.z + (Math.random() - 0.5) * 6,
       };
 
-        tl.to(
+      tl.to(
         ref.position,
         {
           x: randomOffset.x,
@@ -131,12 +115,7 @@ function PhotographyText({triggerRef }) {
   };
 
   return (
-    <group
-  ref={groupRef}
-  position={[0.7  , -1, 3]}
->
-
-
+    <group ref={groupRef} position={[0.7, -1, 3]}>
       {letters.map((char, i) => (
         <Text
           key={i}
@@ -165,13 +144,14 @@ function ProductPhotographyWithErrorBoundary() {
   const containerRef = useRef();
   return (
     <div
-    ref={containerRef}
-    style={{
-      width: "150vw",
-      height: "250vh",
-      marginLeft: "-18vw",
-      marginTop: "-30vw",
-      overflow: "hidden",
+      ref={containerRef}
+      style={{
+        width: "150vw",
+        height: "250vh",
+        marginLeft: "-18vw",
+        marginTop: "-30vw",
+        backgroundColor: "",
+        
       }}
     >
       <ErrorBoundary
